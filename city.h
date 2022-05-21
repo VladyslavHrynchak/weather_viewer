@@ -2,14 +2,11 @@
 #define CITY_H
 #include <string>
 
-class City
+struct City
 {
 public:
     City() = default;
-   City(const std::string& name_, const std::string& lat_, const std::string& lon_);
-
-
-
+    City(const std::string& name_, const std::string& lat_, const std::string& lon_);
 
     std::string name;
     std::string lat;
