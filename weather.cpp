@@ -1,6 +1,7 @@
 #include "weather.h"
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -34,23 +35,21 @@ void Weather::start()
      cout << "Enter city: " << endl;
      cin >> name_of_city;
 
-     for (int i = 0; i < cities.size(); ++i)
+     auto find_city = find_if(cities.begin(),cities.end(),[&](City &i)
      {
-         if(name_of_city == cities[i].name)
-         {
-             httplib::Headers headers;
 
-             httplib::Params params;
-             params.emplace("lat", cities[i].lat);
-             params.emplace("lon", cities[i].lon);
+         return i.name == name_of_city;
+     });
 
-             auto res1 = cli.Get("/v2.0/current?key=61acd3060bd24ffa9d8c070d52e0f11b&lang=uk", params,headers );
+     httplib::Params params;
+     params.emplace("lat", find_city->lat);
+     params.emplace("lon", find_city->lon);
 
-             nlohmann::json a;
-             auto j = a.parse(res1->body);
+     auto res = cli.Get("/v2.0/current?key=61acd3060bd24ffa9d8c070d52e0f11b&lang=uk", params,{} );
 
-             cout << j["data"][0].dump(2) << endl;
+     nlohmann::json a;
+     auto j = a.parse(res->body);
 
-         }
-     }
+     cout << j["data"][0].dump(2) << endl;
+
 }
