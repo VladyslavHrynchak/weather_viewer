@@ -35,7 +35,7 @@ void Weather::start()
      cout << "Enter city: " << endl;
      cin >> name_of_city;
 
-     auto find_city = find_if(cities.begin(),cities.end(),[&](City &i)
+     auto find_city = find_if(cities.begin(),cities.end(),[&name_of_city](const City &i)
      {
 
          return i.name == name_of_city;
@@ -46,10 +46,8 @@ void Weather::start()
      params.emplace("lon", find_city->lon);
 
      auto res = cli.Get("/v2.0/current?key=61acd3060bd24ffa9d8c070d52e0f11b&lang=uk", params,{} );
+     auto a = nlohmann::json::parse(res->body);
 
-     nlohmann::json a;
-     auto j = a.parse(res->body);
-
-     cout << j["data"][0].dump(2) << endl;
+     cout << a["data"][0].dump(2) << endl;
 
 }
